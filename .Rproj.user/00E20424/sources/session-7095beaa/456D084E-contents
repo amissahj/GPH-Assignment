@@ -8,6 +8,5 @@ FP_data <- read_csv("FP_data.csv",
                                      amt_paid_contracep = col_number(),
                                      travel_duration = col_number(),
                     ))
-dep_data <- subset(final_amankwa, select=c(Age, Sex, Relationship, level3, travel_duration, amt_paid_contracep ))
 
 View(final_amankwa)

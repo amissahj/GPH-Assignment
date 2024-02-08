@@ -27,26 +27,46 @@ pacman::p_load(readr,
 
 
 #Importing data using the rio------------------------------------------------------
-library(readr)
-
+library(haven)
 FP_data <- read_csv("FP_data.csv", 
-col_types = cols(level3 = col_factor(levels = c("urban", "rural")), 
-age = col_integer(), 
-sex = col_factor(levels = c("male", "female")), 
-amt_paid_contracep = col_number(),
-travel_duration = col_number(),
-))
+                    col_types = cols(level3 = col_factor(levels = c("urban", "rural")), 
+                                     age = col_integer(), 
+                                     sex = col_factor(levels = c("male", "female")), 
+                                     amt_paid_contracep = col_number(),
+                                     travel_duration = col_number(),
+                    ))
+
+#Viewing the variables to have an idea of the variables names i may be working with------------------------------------------------------
+View(FP_data)
+
+print(FP_data, n = 10)
+
+names(FP_data)
+
+summary(FP_data$age)
+
+summary(FP_data$amt_paid_contracep)
+
+
+##creating a subset and saving it------------------------------------------------------
+temp_data <- subset(FP_data, select=c(age, mstatus, education, level3, travel_duration, amt_paid_contracep ))
+View(temp_data)
+
+glimpse(temp_data)
+
+View(temp_data)
+
 
 
 ###converting character and string variables to factor and integers individually
 as.factor(temp_data$mstatus)
 as.factor (temp_data$education)
 as.factor (temp_data$level3)
- 
+
+
 
 str(temp_data)
 
-View(FP_data)
 
 
 class("amt_paid_contracep")
@@ -65,55 +85,64 @@ temp_data[temp_data == "widowed"] <- "single"
 temp_data["age_group"] = cut(temp_data$age, c(0, 14, 44, 49, Inf), c("0-19", "20-29", "30-39", ">40"), include.lowest=TRUE)
 
 
-table(temp_data$mstatus)
+table(temp_data$age_group)
 
-#Viewing the variables to have an idea of the variables names i may be working with------------------------------------------------------
-View(FP_data)
-
-print(FP_data, n = 10)
-
-names(FP_data)
-
-
-summary(FP_data$age)
-
-summary(FP_data$amt_paid_contracep)
-
-
-##creating a subset and saving it------------------------------------------------------
-temp_data <- subset(FP_data, select=c(age, mstatus, education, level3, travel_duration, amt_paid_contracep ))
-View(temp_data)
-
-glimpse(temp_data)
-
+as.numeric(temp_data$age_group)
 
 ###checking the distribution of the continous variables (age,travel_duration, amt_paid_contracep)
 
 plot(temp_data$age, temp_data$amt_paid_contracep)
 
+plot(temp_data$age_group)
 
 # plot experience vs. salary 
 # (color represents rank, shape represents sex)
 
 library(ggplot2)
-ggplot(fp_new, aes(x =amt_paid_contracep, 
+ggplot(temp_data, aes(x =amt_paid_contracep, 
                      y =age,
                      color=education,
                    shape = level3,
                      size=     travel_duration)) +
   geom_point(size =12, alpha = .6) +
 
-  labs(title = "Academic salary by rank, sex, and years since degree")
+  labs(title = "Contaceptive cost by location, age, and level of education")
 
 
 
 
 ###Stacked bar chart
-ggplot(temp_data, aes(x = education, fill =age_group)) + 
+ggplot(temp_data, aes(x = age_group, fill =education)) + 
   geom_bar(position = "fill") +
-  labs(y = "Proportion")
+  labs(y = "Proportion")+
+  labs(title = "Educational level of Particiapntsby Age")
 
 
 
 
+# Create the 2x2 table
+my_table <- table(temp_data$level3, temp_data$education)
 
+# Add row and column margins
+my_margins <- addmargins(my_table)
+
+# Print the table with margins
+print(my_margins)
+
+
+
+
+pacman::p_load(gridExtra)
+age_table <- temp_data |>
+  tably(age_group, level3) |>
+  adorn_totals(where="both") |>
+  adorn_percentages(denominator = "col") |>
+  adorn_pct_formatting() |>
+  adorn_ns(position = "front") |>
+  adorn_title(row_name = "Age group",
+              col_name = "place of residence")
+  
+  
+
+plot(tableGrob(level3))
+library(tableGrob)

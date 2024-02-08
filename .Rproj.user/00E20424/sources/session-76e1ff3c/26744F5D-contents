@@ -1,4 +1,0 @@
-fp_data<- read.csv(here ("data", "FP_data.csv"), name_repair = "universal", col_types = cols(level3 = col_factor(levels = c("rural", "urban)),
-amt_paid_contracep = col_integer()), ))
-
-getwd()

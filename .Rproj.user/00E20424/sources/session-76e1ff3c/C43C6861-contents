@@ -1,1 +1,0 @@
-Salaries <- read_csv("salaries.csv")
