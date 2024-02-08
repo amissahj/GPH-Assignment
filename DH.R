@@ -28,18 +28,11 @@ pacman::p_load(readr,
 
 #Importing data using the rio------------------------------------------------------
 library(haven)
-FP_data <- read_csv("FP_data.csv", 
-                    col_types = cols(level3 = col_factor(levels = c("urban", "rural")), 
-                                     age = col_integer(), 
-                                     sex = col_factor(levels = c("male", "female")), 
-                                     amt_paid_contracep = col_number(),
-                                     travel_duration = col_number(),
-                    ))
+FP_data <- read_csv("FP_data.csv")
 
 #Viewing the variables to have an idea of the variables names i may be working with------------------------------------------------------
 View(FP_data)
 
-print(FP_data, n = 10)
 
 names(FP_data)
 

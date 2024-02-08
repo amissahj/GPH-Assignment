@@ -1,12 +1,15 @@
 
 
 library(haven)
-FP_data <- read_csv("FP_data.csv", 
+FP_data <- read_csv(here("FP_data.csv"), 
                     col_types = cols(level3 = col_factor(levels = c("urban", "rural")), 
-                                     age = col_integer(), 
+                                    age = col_integer(), 
                                      sex = col_factor(levels = c("male", "female")), 
                                      amt_paid_contracep = col_number(),
                                      travel_duration = col_number(),
                     ))
 
-View(final_amankwa)
+
+
+                    dengue_data <- read_csv(
+                      here("data", "dataset_dengue.csv"),
